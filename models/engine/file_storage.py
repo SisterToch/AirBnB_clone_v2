@@ -1,15 +1,15 @@
 #!/usr/bin/python3
 """
-This module defines a class to manage file storage for hbnb clone
+This module defines a class to handle the file storage for hbnb clone
 """
 import json
 from models.amenity import Amenity
-from models.base_model import BaseModel
-from models.city import City
 from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+from models.base_model import BaseModel
+from models.city import City
 
 classes = {
     'BaseModel': BaseModel, 'User': User, 'Place': Place,
@@ -18,20 +18,20 @@ classes = {
 }
 
 class FileStorage:
-    """This class manages storage of hbnb models in JSON format"""
+    """file storage class manages storage of hbnb models in JSON format"""
     __file_path = 'file.json'
     __objects = {}
 
     def all(self, cls=None):
-        """Returns a dictionary of models currently in storage"""
+        """Returns a dictionary of models that are presently stored"""
         if not cls:
             return FileStorage.__objects
         elif isinstance(cls, str):
-            return {k: v for k, v in FileStorage.__objects.items()
-                    if v.__class__.__name__ == cls}
+            return {key: value for key, value in FileStorage.__objects.items()
+                    if value.__class__.__name__ == cls}
         else:
-            return {k: v for k, v in FileStorage.__objects.items()
-                    if v.__class__ == cls}
+            return {key: value for key, value in FileStorage.__objects.items()
+                    if value.__class__ == cls}
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
@@ -40,8 +40,9 @@ class FileStorage:
             FileStorage.__objects[key] = obj
 
     def save(self):
-        """Saves storage dictionary to file"""
+        """Saves storage dictionary to file specified by the file path"""
         json_objects = {}
+        """json_objects is a dictionary"""
         for key in FileStorage.__objects:
             json_objects[key] = FileStorage.__objects[key].to_dict()
         with open(FileStorage.__file_path, 'w') as f:
@@ -52,14 +53,14 @@ class FileStorage:
         try:
             with open(FileStorage.__file_path, 'r') as f:
                 json_data = json.load(f)
-            for key, val in json_data.items():
-                cls_name = val['__class__']
-                FileStorage.__objects[key] = classes[cls_name](**val)
+            for key, value in json_data.items():
+                cls_name = value['__class__']
+                FileStorage.__objects[key] = classes[cls_name](**value)
         except FileNotFoundError:
             pass
 
     def delete(self, obj=None):
-        """Delete obj from __objects if it’s inside"""
+        """Delete objects from __objects if it’s present"""
         if obj is not None:
             key = f"{obj.__class__.__name__}.{obj.id}"
             del FileStorage.__objects[key]

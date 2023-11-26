@@ -146,6 +146,8 @@ class HBNBCommand(cmd.Cmd):
 
         # Create an instance of the class with the given parameters
         new_instance = HBNBCommand.classes[class_name](**param_dict)
+        storage.new(new_instance)
+        #save the new instance to the file storage
         storage.save()
         print(new_instance.id)
         storage.save()
